@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body,
+#root,
+.app,
+#dashboard {
+  background-color: #050824;
+}
+.debug {
+  border: 1px solid red;
+}
+.hide {
+  font-size: 25px;
+  color: gray;
+  transition: color 0.3s ease;
+}
+.hide:hover {
+  color: white;
+}
+#grid3 {
+  display: grid;
+  grid-template-columns: 20fr 1.7fr 1.7fr;
+}
