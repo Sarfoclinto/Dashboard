@@ -261,7 +261,6 @@ function Dashboard() {
             className="mt-10 flex flex-col gap-2"
             defaultSelectedKeys={["3"]}
             theme="light"
-            
           >
             {items.map((item) => (
               <Menu.Item
@@ -368,11 +367,18 @@ function Dashboard() {
                 <Modal
                   title="Delete Task"
                   open={modalOpen}
-                  onOk={() => {}}
+                  onOk={() => {
+                    deleteSelectedRows();
+                    setModalOpen(false);
+                  }}
                   onCancel={() => setModalOpen(false)}
                 >
                   <p>Are you sure you want to delete: </p>
-                  <h1>{select.record?.name}</h1>
+                  {select.selectedrows?.map((task) => {
+                    return (
+                      <p className="text-base font-semibold ">{task.name}</p>
+                    );
+                  })}
                 </Modal>
 
                 <div className=" w-full min-h-fit flex justify-between items-center mt-5">
@@ -382,8 +388,10 @@ function Dashboard() {
                     value={search}
                     onChange={(e) => {
                       setSearch(e.target.value);
-                      setMapData((prev) => {
-                        return prev.filter((task) => {
+                    }}
+                    onSearch={() => {
+                      setMapData(() => {
+                        return datasource.filter((task) => {
                           return task.name
                             .toLowerCase()
                             .includes(search.toLowerCase());
@@ -393,7 +401,13 @@ function Dashboard() {
                   />
 
                   {select.selectedrows?.length > 0 && (
-                    <Button type="primary" danger onClick={deleteSelectedRows}>
+                    <Button
+                      type="primary"
+                      danger
+                      onClick={() => {
+                        setModalOpen(true);
+                      }}
+                    >
                       Delete
                     </Button>
                   )}
