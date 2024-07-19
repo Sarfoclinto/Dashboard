@@ -2,12 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-body,
-#root,
-.app,
-#dashboard {
-  background-color: #050824;
-}
+
 .debug {
   border: 1px solid red;
 }
@@ -22,4 +17,7 @@ body,
 #grid3 {
   display: grid;
   grid-template-columns: 20fr 1.7fr 1.7fr;
+}
+.lightgray{
+  background-color: lightgray;
 }

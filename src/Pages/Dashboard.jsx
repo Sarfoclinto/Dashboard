@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Badge,
+  Button,
   Divider,
   Input,
   Layout,
   Menu,
+  Modal,
   Space,
   Switch,
   Table,
@@ -27,6 +29,7 @@ import {
   LoadingOutlined,
   ClockCircleOutlined,
   CheckCircleFilled,
+  CodeSandboxCircleFilled,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { Content, Header } from "antd/es/layout/layout";
@@ -148,7 +151,6 @@ function Dashboard() {
       dataIndex: "finishdate",
     },
   ];
-
   const datasource = [
     {
       key: 1,
@@ -223,21 +225,43 @@ function Dashboard() {
       finishdate: <Tag>19 Sun</Tag>,
     },
   ];
+  const [mapData, setMapData] = useState(datasource);
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const [select, setSelect] = useState({
+    record: null,
+    selected: false,
+    selectedrows: null,
+  });
+
+  const deleteSelectedRows = () => {
+    setMapData((prev) => {
+      return prev.filter((task) => {
+        return !select.selectedrows
+          .map((selected) => selected.key)
+          .includes(task.key);
+      });
+    });
+    setSelect([]);
+  };
   return (
     <div id="dashboard" className="w-full h-full p-1">
-      <Layout className="h-full">
+      <Layout className="h-full lightgray">
         <Sider
-          className=" flex flex-col pt-4 px-3 relative"
+          className=" flex flex-col pt-4 px-3 relative h-full "
           collapsed={collapsed}
+          theme="light"
+          style={{ height: "98.5vh" }}
         >
-          <div className="h-8 w-3/4 bg-slate-800 ml-5" />
+          <div className="h-8 w-3/4 bg-slate-200 ml-5" />
           <Divider className="border" />
           <Menu
             className="mt-10 flex flex-col gap-2"
-            // items={items}
             defaultSelectedKeys={["3"]}
-            theme="dark"
+            theme="light"
+            
           >
             {items.map((item) => (
               <Menu.Item
@@ -270,15 +294,21 @@ function Dashboard() {
             )}
           </div>
         </Sider>
-        <Layout>
+        <Layout
+          style={{
+            backgroundColor: "lightgray",
+            height: "98.5vh",
+            padding: "5px",
+          }}
+        >
           <Space
             direction="vertical"
             className="h-full"
             style={{ height: "100%" }}
+            size="middle"
           >
-            <Header className=" flex items-center justify-between ">
-              <div className="text-white w-full flex items-center ">
-                <Input.Search className="w-2/6" placeholder="Search" />
+            <Header className=" flex items-center justify-between bg-white border-b rounded-lg">
+              <div className="w-full flex items-center text-black">
                 <Space className="ml-4">
                   <p>Monday, 6thMarch</p>
                   <DownOutlined />
@@ -307,13 +337,13 @@ function Dashboard() {
               </div>
             </Header>
             <Content
-              className=" h-full bg-slate-500"
-              style={{ backgroundColor: "#050824" }}
+              className=" h-full rounded-lg"
+              style={{ backgroundColor: "#fff" }}
             >
               <div className="w-full min-h-fit py-2">
                 <div
                   id="grid3"
-                  className="w-full flex justify-between items-center text-3xl font-semibold text-white px-5"
+                  className="w-full flex justify-between items-center text-3xl font-semibold px-5"
                 >
                   <p className="">Last tasks</p>
                   <p className=" flex justify-center border-r">94</p>
@@ -321,7 +351,7 @@ function Dashboard() {
                 </div>
                 <div
                   id="grid3"
-                  className="w-full flex justify-between items-center  font-semibold text-white px-5"
+                  className="w-full flex justify-between items-center  font-semibold px-5"
                 >
                   <p className=" ">
                     <span className="text-blue-500 font-bold text-base">
@@ -335,11 +365,57 @@ function Dashboard() {
               </div>
 
               <div id="table" className="px-2">
+                <Modal
+                  title="Delete Task"
+                  open={modalOpen}
+                  onOk={() => {}}
+                  onCancel={() => setModalOpen(false)}
+                >
+                  <p>Are you sure you want to delete: </p>
+                  <h1>{select.record?.name}</h1>
+                </Modal>
+
+                <div className=" w-full min-h-fit flex justify-between items-center mt-5">
+                  <Input.Search
+                    className="w-2/6"
+                    placeholder="Search"
+                    value={search}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      setMapData((prev) => {
+                        return prev.filter((task) => {
+                          return task.name
+                            .toLowerCase()
+                            .includes(search.toLowerCase());
+                        });
+                      });
+                    }}
+                  />
+
+                  {select.selectedrows?.length > 0 && (
+                    <Button type="primary" danger onClick={deleteSelectedRows}>
+                      Delete
+                    </Button>
+                  )}
+                </div>
                 <Table
                   columns={columns}
-                  dataSource={datasource}
-                  rowSelection={{ type: "checkbox" }}
-                  className="mt-5"
+                  dataSource={mapData}
+                  rowSelection={{
+                    type: "checkbox",
+                    onSelect: (record, selected, selectedrows) => {
+                      setSelect(record);
+                      setSelect((prev) => {
+                        return {
+                          ...prev,
+                          selected,
+                          selectedrows,
+                          record,
+                        };
+                      });
+                    },
+                  }}
+                  className="mt-2"
                 />
               </div>
             </Content>
