@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import {
   Avatar,
@@ -32,7 +32,7 @@ import {
   CheckCircleFilled,
   CodeSandboxCircleFilled,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Content, Header } from "antd/es/layout/layout";
 import Dashboard from "../Components/Dashboard";
 import Project from "../Components/Project";
@@ -279,14 +279,12 @@ function Tasklist() {
               className="mt-10 flex flex-col gap-2"
               defaultSelectedKeys={["1"]}
               theme="light"
+              selectable="false"
             >
               {items.map((item) => (
                 <Menu.Item
                   key={item.key.toString()}
                   icon={item.icon}
-                  onClick={() => {
-                    setActive(item.label.toLocaleLowerCase());
-                  }}
                   style={{
                     display: "flex",
                     justifyContent: "flex-start",
