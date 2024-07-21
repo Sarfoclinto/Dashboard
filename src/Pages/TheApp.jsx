@@ -40,7 +40,7 @@ import Services from "../Components/Services";
 import Notification from "../Components/Notification";
 import Chat from "../Components/Chat";
 
-function Tasklist() {
+function TheApp() {
   const items = [
     {
       label: "Dashboard",
@@ -476,4 +476,4 @@ function Tasklist() {
   );
 }
 
-export default Tasklist;
+export default TheApp;

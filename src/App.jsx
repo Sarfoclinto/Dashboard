@@ -1,8 +1,8 @@
-import Tasklist from "./Pages/Tasklist";
+import TheApp from "./Pages/TheApp";
 function App() {
   return (
     <div className="app w-full h-screen">
-      <Tasklist />
+      <TheApp />
     </div>
   );
 }
